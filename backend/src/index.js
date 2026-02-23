@@ -5,8 +5,8 @@ import axios from 'axios'
 
 const app = express()
 const PORT = process.env.PORT || 4000
-// No trailing slash, no extra spaces - Discord redirect_uri must match exactly
-const BACKEND_URL = (process.env.BACKEND_URL || `http://localhost:${PORT}`).trim().replace(/\/$/, '')
+// On Vercel: use BACKEND_URL or auto https://VERCEL_URL
+const BACKEND_URL = (process.env.BACKEND_URL || (process.env.VERCEL ? `https://${process.env.VERCEL_URL}` : null) || `http://localhost:${PORT}`).trim().replace(/\/$/, '')
 const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173').trim().replace(/\/$/, '')
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID?.trim()
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET?.trim()
@@ -18,9 +18,9 @@ const DISCORD_AUTHORIZE_URL = 'https://discord.com/api/oauth2/authorize'
 const DISCORD_TOKEN_URL = 'https://discord.com/api/oauth2/token'
 const DISCORD_USER_URL = 'https://discord.com/api/users/@me'
 const SCOPES = 'identify email'
-// Discord often rejects "localhost" - use 127.0.0.1 for redirect_uri when possible
+// Discord redirect_uri: on Vercel use BACKEND_URL, locally use 127.0.0.1
 const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI
-  || (String(PORT) === '4000' ? `http://127.0.0.1:4000/api/auth/discord/callback` : `${BACKEND_URL}/api/auth/discord/callback`)
+  || (process.env.VERCEL ? `${BACKEND_URL}/api/auth/discord/callback` : (String(PORT) === '4000' ? `http://127.0.0.1:4000/api/auth/discord/callback` : `${BACKEND_URL}/api/auth/discord/callback`))
 const getRedirectUri = () => DISCORD_REDIRECT_URI
 
 // Start Discord OAuth: redirect user to Discord login
@@ -105,10 +105,14 @@ app.get('/api/auth/discord/redirect-uri', (req, res) => {
   })
 })
 
-app.listen(PORT, () => {
-  console.log(`Tribex backend running at ${BACKEND_URL}`)
-  console.log(`Discord redirect_uri: ${DISCORD_REDIRECT_URI}`)
-  if (!DISCORD_CLIENT_ID) {
-    console.warn('DISCORD_CLIENT_ID not set. Add it to .env to enable Login with Discord.')
-  }
-})
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Tribex backend running at ${BACKEND_URL}`)
+    console.log(`Discord redirect_uri: ${DISCORD_REDIRECT_URI}`)
+    if (!DISCORD_CLIENT_ID) {
+      console.warn('DISCORD_CLIENT_ID not set. Add it to .env to enable Login with Discord.')
+    }
+  })
+}
+
+export default app
