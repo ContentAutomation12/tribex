@@ -35,7 +35,7 @@ Pehle **backend** deploy karo, phir **frontend** (taake frontend ka API URL back
 
 1. Vercel → **Add New** → **Project**
 2. **Import** karo: frontend ka repo ya `tribex` repo (root se frontend folder select karna hoga).
-3. **Root Directory**: `frontend` (agar monorepo ho).
+3. **Root Directory**: **`frontend`** (zaroor set karo — agar galat ho to `/dashboard` pe 404 aayega).
 4. **Build**: `npm run build`, **Output**: `dist` (Vite default – usually auto-detect).
 5. **Environment Variables** add karo:
 
@@ -92,3 +92,12 @@ vercel -e VITE_API_URL=https://<your-backend>.vercel.app --prod
 - [ ] Discord Redirect URI add hai: `https://<backend-url>/api/auth/discord/callback`.
 - [ ] Frontend deploy ho chuka hai, `VITE_API_URL` backend URL pe set hai.
 - [ ] Backend env mein `FRONTEND_URL` frontend URL se set hai.
+
+---
+
+## Agar `/dashboard` pe 404 aaye
+
+1. **Vercel** → **tribex** (frontend) project → **Settings** → **General**
+2. **Root Directory** check karo: **`frontend`** hona chahiye (empty ya root mat chhorna).
+3. **Save** karke **Redeploy** karo (Deployments → ⋯ → Redeploy).
+4. `frontend/vercel.json` mein SPA rewrites hain — ye file repo mein honi chahiye; push karke phir se deploy karo.
