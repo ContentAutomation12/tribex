@@ -49,9 +49,29 @@ Bina redeploy ke naye env vars use nahi hote.
 
 ---
 
-## Agar phir bhi error aaye
+## Agar redirect_uri sahi hai phir bhi "Invalid OAuth2 redirect_uri" aaye
 
-Discord **do** redirect add kar sakta hai. Dono add karke try karo:
+Jab address bar mein **`/api/auth/discord/callback`** dikhe (sahi URL) par Discord phir bhi 400 de, to problem **Discord Developer Portal** par hai — Redirects list mein exact URL add nahi hai ya galat app.
+
+**Ye karo:**
+
+1. **Discord** → https://discord.com/developers/applications  
+2. **Sahi app** kholo: **Tribex** (Client ID **1475571792163766272**).
+3. **OAuth2** (left) → **Redirects**.
+4. **Pehle saari redirects hata do** (Delete), phir **sirf ye ek add karo** (copy-paste, no typing):
+   ```
+   https://tribexserver.vercel.app/api/auth/discord/callback
+   ```
+5. **Save Changes** zaroor dabao — green "Saved" dikhna chahiye.
+6. **2–3 minute wait** karo (Discord propagate karta hai), phir **incognito** ya naya tab se **Login with Discord** try karo.
+
+**Check:** Redirects list mein **bilkul yehi** dikhna chahiye, bina trailing slash, bina space. Agar `http://` ya `/api/discord/` (bina auth) hai to delete karke sahi wala add karo.
+
+---
+
+## (Optional) Dono variants add karke try karo
+
+Agar abhi bhi 400 aaye to dono add karke test karo:
 
 1. `https://tribexserver.vercel.app/api/auth/discord/callback`
 2. `https://tribexserver.vercel.app/api/auth/discord/callback/`
