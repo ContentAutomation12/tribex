@@ -18,9 +18,14 @@ const DISCORD_AUTHORIZE_URL = 'https://discord.com/api/oauth2/authorize'
 const DISCORD_TOKEN_URL = 'https://discord.com/api/oauth2/token'
 const DISCORD_USER_URL = 'https://discord.com/api/users/@me'
 const SCOPES = 'identify email'
-// Discord redirect_uri: on Vercel use BACKEND_URL, locally use 127.0.0.1
-const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI
-  || (process.env.VERCEL ? `${BACKEND_URL}/api/auth/discord/callback` : (String(PORT) === '4000' ? `http://127.0.0.1:4000/api/auth/discord/callback` : `${BACKEND_URL}/api/auth/discord/callback`))
+// Discord redirect_uri: must be exactly /api/auth/discord/callback (Discord rejects /api/discord/callback)
+const BUILT_REDIRECT_URI = process.env.VERCEL
+  ? `${BACKEND_URL}/api/auth/discord/callback`
+  : (String(PORT) === '4000' ? `http://127.0.0.1:4000/api/auth/discord/callback` : `${BACKEND_URL}/api/auth/discord/callback`)
+const rawEnvRedirect = process.env.DISCORD_REDIRECT_URI?.trim().replace(/\/$/, '')
+const DISCORD_REDIRECT_URI = (rawEnvRedirect && rawEnvRedirect.endsWith('/api/auth/discord/callback'))
+  ? rawEnvRedirect
+  : BUILT_REDIRECT_URI
 const getRedirectUri = () => DISCORD_REDIRECT_URI
 
 // Start Discord OAuth: redirect user to Discord login
