@@ -43,18 +43,9 @@ Bina redeploy ke naye env vars use nahi hote.
 
 ---
 
-## Vercel env (zaroor check karo)
+## Vercel env
 
-Agar request mein **`/api/discord/callback`** ja raha hai (bina **`/auth/`**), matlab backend par **galat** `DISCORD_REDIRECT_URI` set hai.
-
-1. **Vercel** → apna **backend** project → **Settings** → **Environment Variables**
-2. **DISCORD_REDIRECT_URI** dhoondo:
-   - Agar value **`.../api/discord/callback`** hai (auth nahi) → **Delete** karo **ya** sahi value set karo:  
-     `https://tribexserver.vercel.app/api/auth/discord/callback`
-   - Agar variable hi nahi hai to theek hai — code apne aap sahi URL bana leta hai.
-3. Save karke **backend ko dobara deploy** karo (Redeploy).
-
-Code mein ab safeguard hai: agar env par galat URL set hai to bhi use **sirf sahi path** (`/api/auth/discord/callback`) wala redirect bhejega. Phir bhi Vercel se galat env hata dena behtar hai.
+**Ab code `DISCORD_REDIRECT_URI` env use nahi karta** — redirect_uri hamesha `BACKEND_URL + '/api/auth/discord/callback'` se banta hai. So Vercel par **DISCORD_REDIRECT_URI** rakho ya hata do, dono theek. Sirf **BACKEND_URL** sahi hona chahiye: `https://tribexserver.vercel.app`.
 
 ---
 
