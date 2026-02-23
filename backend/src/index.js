@@ -28,8 +28,8 @@ const DISCORD_REDIRECT_URI = (rawEnvRedirect && rawEnvRedirect.endsWith('/api/au
   : BUILT_REDIRECT_URI
 const getRedirectUri = () => DISCORD_REDIRECT_URI
 
-// Start Discord OAuth: redirect user to Discord login
-app.get('/api/auth/discord', (req, res) => {
+// Start Discord OAuth: redirect user to Discord (always use /api/auth/discord/callback as redirect_uri)
+const handleDiscordOAuthStart = (req, res) => {
   if (!DISCORD_CLIENT_ID) {
     return res.status(500).json({ error: 'Discord OAuth not configured. Set DISCORD_CLIENT_ID in .env' })
   }
@@ -44,7 +44,10 @@ app.get('/api/auth/discord', (req, res) => {
   if (state) params.set('state', state)
   const url = `${DISCORD_AUTHORIZE_URL}?${params.toString()}`
   res.redirect(url)
-})
+}
+app.get('/api/auth/discord', handleDiscordOAuthStart)
+// Safety: agar koi /api/discord hit kare (purana link/cache), tab bhi sahi redirect_uri bhejenge
+app.get('/api/discord', handleDiscordOAuthStart)
 
 // Discord callback: exchange code for token, get user, redirect to frontend
 app.get('/api/auth/discord/callback', async (req, res) => {

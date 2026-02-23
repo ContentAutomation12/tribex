@@ -1,5 +1,7 @@
 # Discord "Invalid OAuth2 redirect_uri" – Live URL fix
 
+**Zaroor:** Vercel par env add/change karne ke baad **Redeploy** karna zaroori hai, warna purana deployment purane env se chalता hai.
+
 Request mein ye redirect ja raha hai (isiko Discord accept karega):
 
 ```
@@ -29,6 +31,17 @@ https://tribexserver.vercel.app/api/auth/discord/callback
 - [ ] URL ke end par **slash (/) nahi** hai?
 - [ ] Koi extra space (start/end) nahi hai?
 - [ ] **Save Changes** click kiya?
+
+## Redeploy zaroor karo (env change ke baad)
+
+1. **Vercel** → **tribex_server** project → **Deployments**
+2. Sabse upar wali (latest) deployment pe **⋯** (three dots) click karo
+3. **Redeploy** choose karo → **Redeploy** confirm karo
+4. 1–2 minute wait karo, phir **Login with Discord** try karo
+
+Bina redeploy ke naye env vars use nahi hote.
+
+---
 
 ## Vercel env (zaroor check karo)
 
