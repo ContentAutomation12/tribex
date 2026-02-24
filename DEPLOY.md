@@ -97,7 +97,18 @@ vercel -e VITE_API_URL=https://<your-backend>.vercel.app --prod
 
 ## Agar `/dashboard` pe 404 aaye
 
-1. **Vercel** → **tribex** (frontend) project → **Settings** → **General**
-2. **Root Directory** check karo: **`frontend`** hona chahiye (empty ya root mat chhorna).
-3. **Save** karke **Redeploy** karo (Deployments → ⋯ → Redeploy).
-4. `frontend/vercel.json` mein SPA rewrites hain — ye file repo mein honi chahiye; push karke phir se deploy karo.
+**Option A – Root Directory = `frontend` (recommended)**  
+1. **Vercel** → **tribex** (frontend) project → **Settings** → **General**  
+2. **Root Directory** = **`frontend`** (empty mat chhorna).  
+3. **Save** → **Deployments** → **Redeploy** (latest deployment pe ⋯ → Redeploy).  
+4. Latest code push karke **new deployment** trigger karo (Redeploy purane commit se hota hai — push se naya deploy aata hai).
+
+**Option B – Root Directory khali / repo root**  
+Agar frontend project ka Root Directory **empty** hai ya **`.`** hai:  
+1. **Settings** → **Build & Development**  
+2. **Build Command**: `cd frontend && npm run build`  
+3. **Output Directory**: `frontend/dist`  
+4. Repo root par **`vercel.json`** add hai (SPA rewrites) — usi se `/dashboard` handle hoga.  
+5. **Save** → **Redeploy**.
+
+**Don’t forget:** Push karke **naya deploy** aane do; sirf Redeploy se purana commit dobara deploy hota hai.
