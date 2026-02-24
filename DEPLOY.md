@@ -97,18 +97,26 @@ vercel -e VITE_API_URL=https://<your-backend>.vercel.app --prod
 
 ## Agar `/dashboard` pe 404 aaye
 
+**Sabse pehle – Production vs Project Settings warning:**  
+Agar Vercel par dikhe: *"Configuration Settings in the current Production deployment differ from your current Project Settings"*, to **live abhi purani settings use kar raha hai**. Naye rewrites tabhi chalenge jab **current project settings** se **naya deploy** hoga.
+
+**Kya karna hai (step-by-step):**
+
+1. **Settings** → **Build and Deployment** pe jao.
+2. **Root Directory** check karo: **`frontend`** hona chahiye. Agar sahi hai to **Save** dabao.
+3. **"Production Overrides"** wala section **expand** karo (jahan deployment URL dikhta hai).
+4. Wahan **Redeploy** / **Use current project settings** jaisa option ho to use karo, **ya** neeche step follow karo.
+5. **Deployments** tab pe jao → sabse upar wali (latest) deployment pe **⋯** (three dots) → **Redeploy**.
+6. **Redeploy** karte waqt agar option ho to **"Use existing Build Cache"** **OFF** karo (clean build ke liye).
+7. Deploy **complete** hone ka wait karo (1–2 min), phir **incognito** window mein `https://tribex.vercel.app/dashboard` khol ke check karo.
+
 **Option A – Root Directory = `frontend` (recommended)**  
-1. **Vercel** → **tribex** (frontend) project → **Settings** → **General**  
-2. **Root Directory** = **`frontend`** (empty mat chhorna).  
-3. **Save** → **Deployments** → **Redeploy** (latest deployment pe ⋯ → Redeploy).  
-4. Latest code push karke **new deployment** trigger karo (Redeploy purane commit se hota hai — push se naya deploy aata hai).
+- **Root Directory** = **`frontend`** (empty mat chhorna).  
+- Latest code **push** karke **new deployment** aane do (sirf Redeploy purane commit se hota hai).
 
 **Option B – Root Directory khali / repo root**  
 Agar frontend project ka Root Directory **empty** hai ya **`.`** hai:  
-1. **Settings** → **Build & Development**  
-2. **Build Command**: `cd frontend && npm run build`  
-3. **Output Directory**: `frontend/dist`  
-4. Repo root par **`vercel.json`** add hai (SPA rewrites) — usi se `/dashboard` handle hoga.  
-5. **Save** → **Redeploy**.
-
-**Don’t forget:** Push karke **naya deploy** aane do; sirf Redeploy se purana commit dobara deploy hota hai.
+1. **Build Command**: `cd frontend && npm run build`  
+2. **Output Directory**: `frontend/dist`  
+3. Repo root par **`vercel.json`** add hai (SPA rewrites).  
+4. **Save** → **Redeploy** (production overrides sync karke).
